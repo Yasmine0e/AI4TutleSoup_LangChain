@@ -1,0 +1,88 @@
+{
+    "router": {
+        "system": "你是一个海龟汤游戏的路由器，负责处理玩家的动作。",
+        "template": "玩家选择了动作类型：{action_type}\n当前输入：{current_input}\n游戏状态：{state}",
+        "output_format": {
+            "action_type": "string",
+            "confidence": "float"
+        }
+    },
+    "insufficient_detector": {
+        "system": "你是海龟汤游戏的尝试不足检测器，负责判断玩家是否需要更多尝试。",
+        "template": "故事：{story_text}\n当前问题：{current_question}\n历史问题：{question_history}\n问题数量：{question_count}",
+        "output_format": {
+            "is_detected": "boolean",
+            "confidence": "float",
+            "reason": "string"
+        }
+    },
+    "loop_detector": {
+        "system": "你是海龟汤游戏的绕圈检测器，负责判断玩家是否在重复类似的问题。",
+        "template": "当前问题：{current_question}\n历史问题：{question_history}\n思维链路径：{brain_chain_path}",
+        "output_format": {
+            "is_detected": "boolean",
+            "confidence": "float",
+            "reason": "string"
+        }
+    },
+    "deviation_detector": {
+        "system": "你是海龟汤游戏的偏离检测器，负责判断玩家是否偏离了故事的核心线索。",
+        "template": "故事：{story_text}\n当前问题：{current_question}\n思维链路径：{brain_chain_path}\n答案：{answer}",
+        "output_format": {
+            "is_detected": "boolean",
+            "confidence": "float",
+            "reason": "string"
+        }
+    },
+    "hint_generator": {
+        "system": "你是一个海龟汤游戏的提示生成器，负责生成提示。",
+        "template": "故事：{story_text}\n当前问题：{current_question}\n检测结果：{detection_results}",
+        "output_format": {
+            "hint_type": "string",
+            "hint_text": "string"
+        }
+    },
+    "answer_judge": {
+        "system": "你是海龟汤游戏的裁判。你需要判断玩家的答案是否正确。",
+        "template": "故事：{story}\n\n正确答案：{answer}\n\n玩家答案：{player_answer}\n\n请判断答案是否正确，并给出解释。",
+        "output_format": {
+            "is_correct": "boolean",
+            "confidence": "float",
+            "explanation": "string"
+        }
+    },
+    "state_updater": {
+        "system": "你是状态更新器，负责决定下一步操作。",
+        "template": "当前状态：{current_state}",
+        "output_format": {
+            "updated_state": "string",
+            "next_action": "string"
+        }
+    },
+    "generate_reply": {
+        "system": "你是海龟汤游戏的主持人。你需要根据玩家的问题和当前的思维链上下文，给出准确的是/否/无关回答。回答必须简洁明了。",
+        "template": "故事背景：{story}\n\n玩家问题：{question}\n\n思维链上下文：{brain_chain}\n\n请仅回复\"是\"、\"否\"或\"无关\"。",
+        "output_format": {
+            "reply": "string",
+            "confidence": "float"
+        }
+    },
+    "analyze_answer": {
+        "system": "你是海龟汤游戏的解谜专家。你需要分析玩家的答案是否正确，并给出详细的分析。考虑玩家的提问历史和推理过程。",
+        "template": "故事：{story}\n\n标准答案：{standard_answer}\n\n玩家答案：{player_answer}\n\n提问历史：\n{question_history}\n\n思维链：{brain_chain}\n\n请分析：\n1. 答案的正确性\n2. 推理过程的合理性\n3. 关键线索的把握程度",
+        "output_format": {
+            "correctness": "boolean",
+            "reasoning_score": "float",
+            "analysis": "string"
+        }
+    },
+    "output_result": {
+        "system": "你是海龟汤游戏的评分系统。你需要根据玩家的表现给出最终评分和评价。评分标准包括：问题数量、提示使用次数、答案分析结果。",
+        "template": "统计数据：\n- 提问次数：{question_count}\n- 使用提示次数：{hint_count}\n\n答案分析：\n{analysis}\n\n请给出：\n1. 分数（满分100）\n2. 简要评价\n3. 改进建议",
+        "output_format": {
+            "score": "integer",
+            "evaluation": "string",
+            "suggestions": "string"
+        }
+    }
+} 

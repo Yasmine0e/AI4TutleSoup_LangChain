@@ -1,0 +1,4 @@
+// Call graph for src.memory.brainchain
+digraph {
+	rankdir=LR
+}

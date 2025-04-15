@@ -1,0 +1,52 @@
+{
+    "direction": {
+        "system": "你是一个逻辑推理教练。你要根据故事内容和当前提问，给出玩家可以深入追问的关键方向。",
+        "template": "故事背景如下：\n{story}\n\n当前玩家的问题是：\n\"{current_question}\"\n\n玩家思维如下：\n{brain_chain}\n\n基于以上内容，请判断玩家是否忽略了关键的推理方向。请从\"谁\"、\"怎么做\"、\"为什么\"这三方面，指出一个值得深入的问题角度，并以一句简洁中文提示返回。\n\n请以 JSON 格式返回，包含以下字段：\n- hint_text: 提示文字\n- confidence: 置信度(0-1)\n- hint_type: \"direction\"\n- reason: 给出此提示的原因",
+        "example_output": {
+            "hint_text": "不妨深入追问死者最后见到的人是谁？",
+            "confidence": 0.85,
+            "hint_type": "direction",
+            "reason": "玩家目前的问题集中在案发现场，但忽略了人际关系线索"
+        }
+    },
+    "deviation": {
+        "system": "你是一个提示系统。你要判断玩家是否偏离了故事的主线推理方向，并提示其回归重点。",
+        "template": "当前故事：\n{story}\n\n玩家思维：\n{brain_chain}\n\n当前问题是：\n\"{current_question}\"\n\n请判断当前问题是否脱离了重点线索，并给出一句话提醒玩家转回主线上。\n\n请以 JSON 格式返回，包含以下字段：\n- hint_text: 提示文字\n- confidence: 置信度(0-1)\n- hint_type: \"deviation\"\n- reason: 判断偏离的原因",
+        "example_output": {
+            "hint_text": "现在的问题可能偏离了核心，建议先搞清楚案发时间点的关键人物动向。",
+            "confidence": 0.92,
+            "hint_type": "deviation",
+            "reason": "玩家开始关注无关的环境细节，而忽视了关键时间点的重要线索"
+        }
+    },
+    "default": {
+        "system": "你是一个通用提问建议生成器。",
+        "template": "以下是故事背景：\n{story}\n\n玩家可能暂时不知道要问什么，你可以给出一个比较基础、容易切入的建议提问方向。\n\n避免给出答案，只提示可提问的线索。\n\n请以 JSON 格式返回，包含以下字段：\n- hint_text: 提示文字\n- confidence: 置信度(0-1)\n- hint_type: \"default\"\n- reason: 为什么这是个好的起点",
+        "example_output": {
+            "hint_text": "可以先了解一下案发当天的天气状况如何？",
+            "confidence": 0.75,
+            "hint_type": "default",
+            "reason": "天气状况是一个基础且中性的切入点，可能影响案件的多个方面"
+        }
+    },
+    "strategy": {
+        "system": "你是一个逻辑推理游戏的导师。请教授玩家一种提问技巧，帮助他们更好地进行推理。",
+        "template": "这是故事背景：\n{story}\n\n玩家思维：\n{brain_chain}\n\n他们的问题方式可能不太有效。请你教他们一种提问策略（如\"先排除不可能\"、\"分阶段定位\"、\"人物动机提问\"等），并用一句简洁中文引导出来。\n\n请以 JSON 格式返回，包含以下字段：\n- hint_text: 提示文字\n- confidence: 置信度(0-1)\n- hint_type: \"strategy\"\n- reason: 为什么推荐这个策略",
+        "example_output": {
+            "hint_text": "建议采用时间线推理法，先确定每个关键时间点发生了什么。",
+            "confidence": 0.88,
+            "hint_type": "strategy",
+            "reason": "玩家的问题比较零散，需要一个系统性的时间线梳理来理清事件发展"
+        }
+    },
+    "summary": {
+        "system": "你是一个推理链总结专家。你需要对玩家的推理过程进行简明扼要的总结。",
+        "template": "这是故事背景：\n{story}\n\n玩家的推理链如下：\n{brain_chain}\n\n请对推理过程进行总结，突出关键发现和逻辑关系。\n\n请以 JSON 格式返回，包含以下字段：\n- hint_text: 总结文字\n- confidence: 总结的完整度(0-1)\n- hint_type: \"summary\"\n- reason: 为什么这样总结",
+        "example_output": {
+            "hint_text": "目前已确认：1)案发时间在晚上8点到10点之间；2)死者最后一次出现在便利店；3)现场发现了不属于死者的指纹。",
+            "confidence": 0.9,
+            "hint_type": "summary",
+            "reason": "这三点是目前最关键的发现，构成了案件的基本框架"
+        }
+    }
+}
