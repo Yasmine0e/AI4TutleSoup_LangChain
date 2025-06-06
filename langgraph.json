@@ -1,0 +1,29 @@
+{
+    "dependencies": [
+        "langgraph>=0.4.8",
+        "langsmith>=0.3.44",
+        "langchain-core",
+        "python-dotenv"
+    ],
+    "graphs": {
+        "ai4turtlesoup": {
+            "path": "src.game_controller:build_graph",
+            "description": "ai4turtlesoup",
+            "config_schema": {
+                "type": "object",
+                "properties": {
+                    "game_id": {
+                        "type": "string",
+                        "description": "Game ID",
+                        "default": "game_001"
+                    }
+                }
+            }
+        }
+    },
+    "env": {
+        "LANGSMITH_API_KEY": "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",
+        "LANGSMITH_TRACING": "true",
+        "LANGSMITH_PROJECT": "ai4turtlesoup"
+    }
+} 

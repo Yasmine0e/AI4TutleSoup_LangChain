@@ -201,13 +201,10 @@ class TurtleSoupGame:
                 break
 
 def main():
-    """游戏入口函数"""
-    # 创建游戏实例
-    game = TurtleSoupGame(
-        controller=GameController(...),  # 需要传入必要的agent
-        context=GameContext(...),  # 需要传入故事和答案
-        save_file="game_save.json"  # 存档文件
-    )
-    
-    # 运行游戏
-    asyncio.run(game.run()) 
+    """命令行入口点"""
+    print("欢迎使用 AI 海龟汤游戏！ 🐢")
+    # 这里添加游戏启动逻辑
+    pass
+
+if __name__ == "__main__":
+    main() 

@@ -1,6 +1,11 @@
 from typing import Dict, Any
 from pathlib import Path
 import os
+from dotenv import load_dotenv
+
+# 加载 .env 文件
+load_dotenv()
+
 # 游戏配置
 GAME_CONFIG = {
     "max_turns": 20,  # 最大回合数

@@ -19,6 +19,58 @@ from src.utils.state_utils import with_state_update
 
 logger = logging.getLogger(__name__)
 
+def build_graph() -> StateGraph:
+    """
+    构建游戏流程图
+    
+    Returns:
+        StateGraph: 游戏流程图
+    """
+    # 创建流程图
+    graph = StateGraph(GameState)
+    
+    # 添加节点
+    graph.add_node("reply_generation", reply_generation_node)
+    graph.add_node("structure_analysis", structure_analysis_node)
+    graph.add_node("analysis", analysis_node)
+    graph.add_node("detection", detection_node)
+    graph.add_node("detect_stuck", detect_stuck)
+    graph.add_node("reveal_answer", reveal_answer)
+    graph.add_node("judge_answer", judge_answer)
+    graph.add_node("answer_analysis", answer_analysis)
+    graph.add_node("output_result", output_result)
+    graph.add_node("hint_generation", hint_generation)
+    graph.add_node("request_hint", request_hint)
+    
+    # 设置边和条件
+    graph.add_edge(START, "reply_generation")
+    graph.add_edge("reply_generation", "structure_analysis")
+    graph.add_edge("structure_analysis", "analysis")
+    graph.add_edge("analysis", "detection")
+    
+    # 添加条件边
+    graph.add_conditional_edges(
+        "detection",
+        check_detection_result,
+        {
+            "stuck": "detect_stuck",
+            "hint": "hint_generation",
+            "answer": "judge_answer",
+            "continue": END
+        }
+    )
+    
+    # 设置其他边
+    graph.add_edge("detect_stuck", "hint_generation")
+    graph.add_edge("hint_generation", END)
+    graph.add_edge("judge_answer", "answer_analysis")
+    graph.add_edge("answer_analysis", "output_result")
+    graph.add_edge("output_result", END)
+    graph.add_edge("reveal_answer", END)
+    graph.add_edge("request_hint", "hint_generation")
+    
+    return graph
+
 class GameController:
     """游戏流程控制器"""
     
@@ -54,7 +106,7 @@ class GameController:
         self.logger = logger
         
         # 构建流程图
-        self.graph = self.build_graph()
+        self.graph = build_graph()
     
     async def reply_generation_node(self, state: GameState) -> Dict[str, Any]:
         """
@@ -232,93 +284,6 @@ class GameController:
             }
         }
 
-    def build_graph(self) -> StateGraph:
-        """
-        构建游戏流程图
-        
-        Returns:
-            StateGraph: LangGraph 流程图
-        """
-        # 创建工作流
-        workflow = StateGraph(GameState)
-        
-        # 注册节点
-        workflow.add_node("stuck_detection", RunnableLambda(self.detect_stuck))
-        workflow.add_node("structure_analysis", RunnableLambda(self.structure_analysis_node))
-        workflow.add_node("reply_generation", RunnableLambda(self.reply_generation_node))
-        workflow.add_node('request_hint', RunnableLambda(self.request_hint))
-        workflow.add_node("hint_generation", RunnableLambda(self.hint_generation))
-        workflow.add_node("analysis", RunnableLambda(self.analysis_node))
-        workflow.add_node("detection", RunnableLambda(self.detection_node))
-        workflow.add_node("reveal_answer", RunnableLambda(self.reveal_answer))
-        workflow.add_node("judge_answer", RunnableLambda(self.judge_answer))
-        workflow.add_node("answer_analysis", RunnableLambda(self.answer_analysis))
-        workflow.add_node("output_result", RunnableLambda(self.output_result))
-        
-        # 设置条件路由
-        def route_by_action(state: GameState) -> str:
-            """根据玩家动作选择路径"""
-            if state.player_action == "hint_request":
-                return "request_hint"
-            elif state.player_action == "answer_request":
-                return "reveal_answer"
-            elif state.player_action == "submit_answer":
-                return "judge_answer"
-            else:
-                return "stuck_detection"
-                
-        def check_detection_result(state: GameState) -> str:
-            """检查检测结果决定下一步"""
-            if state.is_stuck:
-                return "hint_generation"
-            elif state.is_looping:
-                return "hint_generation"
-            elif state.is_deviated:
-                return "hint_generation"
-            else:
-                return "reply_generation"
-                
-        # 设置入口点
-        workflow.add_conditional_edges(
-            START,
-            route_by_action,
-            {
-                "request_hint": "request_hint",
-                "reveal_answer": "reveal_answer",
-                "judge_answer": "judge_answer",
-                "stuck_detection": "stuck_detection"
-            }
-        )
-        
-        # 设置其他边
-        workflow.add_conditional_edges(
-            "stuck_detection",
-            check_detection_result,
-            {
-                "hint_generation": "hint_generation",
-                "reply_generation": "reply_generation"
-            }
-        )
-        
-        # 设置基本流程边
-        workflow.add_edge("hint_generation", "reply_generation")
-        workflow.add_edge("reply_generation", "structure_analysis")
-        workflow.add_edge("structure_analysis", "analysis")
-        workflow.add_edge("analysis", "detection")
-        workflow.add_edge("detection", END)
-        
-        # 设置提示请求路径
-        workflow.add_edge("request_hint", END)
-        
-        # 设置答案相关路径
-        workflow.add_edge("reveal_answer", END)
-        workflow.add_edge("judge_answer", "answer_analysis")
-        workflow.add_edge("answer_analysis", "output_result")
-        workflow.add_edge("output_result", END)
-        
-        # 编译工作流
-        return workflow.compile()
-        
     async def process_question(self, question: str, player_action: str = "question", current_answer: str = None) -> Dict[str, Any]:
         """
         处理玩家问题

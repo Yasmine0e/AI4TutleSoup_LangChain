@@ -10,12 +10,13 @@ from src.runtime import GameRuntime
 from src.context import GameContext, Story
 from src.state_schema import GameState
 from langchain_deepseek import ChatDeepSeek
-
+from dotenv import load_dotenv
+load_dotenv()
 def get_test_llm() -> ChatDeepSeek:
     """
     获取测试用的 LLM 实例
     
-    Returns:
+Returns:
         ChatDeepseek: 测试用的 LLM 实例
     """
     api_key = os.getenv("DEEPSEEK_API_KEY")
@@ -105,7 +106,8 @@ async def test_complete_game_flow():
     print("\n✅ 测试场景 5: 提交答案")
     result = await controller.process_question(
         question="我要提交答案：这个男人是自己锁门后自杀的。",
-        player_action="submit_answer"
+        player_action="submit_answer",
+        current_answer="这个男人是自己锁门后自杀的。"
     )
     print_test_result("判题结果", result)
 

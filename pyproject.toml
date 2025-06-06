@@ -1,0 +1,29 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ai4turtlesoup"
+version = "0.1.0"
+description = "基于 LangGraph + LangChain 构建的智能海龟汤推理游戏系统"
+requires-python = ">=3.8"
+dependencies = [
+    "langchain>=0.1.0",
+    "langgraph>=0.4.8",  # 更新到最新稳定版本
+    "langsmith>=0.3.44",  # 更新到最新稳定版本
+    "pydantic>=2.0.0",
+    "python-dotenv>=1.0.0",
+    "langchain-deepseek>=0.0.1",  # DeepSeek 模型支持
+    "langchain-core>=0.1.0",      # LangChain 核心功能
+    "langchain-community>=0.0.10",  # 添加 langchain-community 依赖
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src"]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+packages = ["ai4turtlesoup"]
+
+[project.scripts]
+ai4turtlesoup = "ai4turtlesoup.main:main"  # 添加命令行入口点 

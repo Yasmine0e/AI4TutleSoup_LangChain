@@ -1,17 +1,10 @@
 """ 测试 LLM 配置是否正确 (已通过)"""
 import os
-import sys
-from pathlib import Path
-
-# 添加项目根目录到 Python 路径
-project_root = Path(__file__).parent.parent
-sys.path.append(str(project_root))
-
-
 import pytest
 from langchain_deepseek import ChatDeepSeek
 from src.config import LLM_CONFIG
-
+from dotenv import load_dotenv
+load_dotenv()
 def test_llm_config():
     """测试 LLM 配置是否正确"""
     # 检查环境变量
