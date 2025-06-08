@@ -2,17 +2,21 @@ from typing import List, Dict, Any, Optional, Literal
 from pydantic import BaseModel, Field
 import time
 from src.memory.brainchain import BrainChainMemory
-
+from langchain_core.messages import BaseMessage
+from langgraph.graph.message import add_messages
+from typing_extensions import Annotated
 
 class GameState(BaseModel):
     """
     LangGraph 流程状态，仅包含当前轮次需要的状态
     """
+    # LangGraph Studio 兼容字段
+    player_action: Literal["question", "hint_request", "answer_request", "submit_answer","None"] = Field(
+    game_id: str = Field(None, description="游戏ID")
+    messages: Annotated[list[BaseMessage], add_messages] = []
     # 当前动作
-    player_action: Literal["question", "hint_request", "answer_request", "submit_answer"] = Field(
-        ..., description="玩家当前动作"
-    )
-    current_question: str = Field(..., description="当前问题")
+    user_input: Optional[str] = Field(None, description="用户输入")
+    current_question: Optional[str] = Field(None, description="当前问题")
     current_answer: Optional[str] = Field(None, description="当前回答")
     current_chain_id: Optional[str] = Field(None, description="当前焦点思维链")
     current_node_id: Optional[str] = Field(None, description="当前焦点节点")

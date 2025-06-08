@@ -59,8 +59,8 @@ class GameRuntime:
             context=context
         )
         
-        # 构建流程图
-        self.graph = self.controller.build_graph()
+        # 流程图已经在controller中构建完成
+        self.graph = self.controller.graph
     
     def get_controller(self) -> GameController:
         """
